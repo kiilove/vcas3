@@ -16,7 +16,7 @@ export const getData = async (url) => {
   }
 };
 
-export const postData = async (items, url) => {
+export const postData = async (items, url, modal) => {
   const header = { "Content-type": "application/json" };
   try {
     await axios({
@@ -26,6 +26,7 @@ export const postData = async (items, url) => {
       data: items,
     });
     alert("데이터 저장이 완료되었습니다.");
+    modal && modal();
   } catch (error) {
     alert("저장 실패!(서버 연결을 확인하세요.)");
   }

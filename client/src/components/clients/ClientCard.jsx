@@ -1,9 +1,12 @@
 import { faIdCard, faPaste } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { blue, grey, orange, yellow } from "@mui/material/colors";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+
+import { faBookmark as fsBookmark } from "@fortawesome/free-solid-svg-icons";
 
 const Info = styled.div`
   opacity: 0;
@@ -55,10 +58,51 @@ const Icon = styled.div`
     transform: scale(1.1);
   }
 `;
+
+const CheckIcon = styled.span`
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ClientIcon = (icon) => (
+  <CheckIcon>
+    <FontAwesomeIcon icon={icon} />
+  </CheckIcon>
+);
 const ClientCard = (props) => {
+  const [styles, setStyles] = useState({});
+
+  useEffect(() => {
+    if (props.status && props.status.like) {
+      setStyles({
+        color: blue[800],
+        fontWeight: 600,
+      });
+    } else if (props.status && props.status.dislike) {
+      setStyles({
+        textDecoration: "line-through",
+        color: grey[400],
+        fontWeight: 600,
+      });
+    }
+  }, []);
+
   return (
     <Container>
-      <Typography variant="body1">{props.num}</Typography>
+      {props.status && props.status.favorite && (
+        <div style={{ color: yellow[800], marginRight: "10px" }}>
+          {ClientIcon(fsBookmark)}
+        </div>
+      )}
+
+      <Typography variant="body1" style={styles}>
+        {props.num}
+      </Typography>
+
       <Info>
         <Tooltip title="상담업무 바로가기">
           <Link to={`/marketingDetail/${props.id}`}>

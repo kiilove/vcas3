@@ -222,7 +222,12 @@ const ClientListCard = () => {
             </LoadingWrapper>
             {!loading &&
               getClients.map((item, index) => (
-                <ClientCard num={item.clientNumber} id={item._id} key={index} />
+                <ClientCard
+                  num={item.clientNumber}
+                  id={item._id}
+                  key={index}
+                  status={item.clientStatus}
+                />
               ))}
           </ListWrapper>
         </ComponentBodyWrapper>

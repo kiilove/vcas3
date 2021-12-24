@@ -100,6 +100,8 @@ const WarningMessage = styled.span`
 `;
 
 const CreateClient = (props) => {
+  const [save, setSave] = useState(true);
+  const [validate, setValidate] = useState(false);
   const [count, setCount] = useState(1);
   const [clientList, setClientList] = useState([{ clientNumber: "" }]);
   const urlClient = `${BASE_URL}/api/client/register/clients`;
@@ -109,9 +111,11 @@ const CreateClient = (props) => {
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
+    setValidate(isNaN(value));
     const list = [...clientList];
     list[index][name] = value;
     setClientList(list);
+    setSave(false);
   };
 
   // handle click event of the Remove button
@@ -174,11 +178,12 @@ const CreateClient = (props) => {
                 size="small"
                 variant="contained"
                 sx={{ mr: 1 }}
+                disabled={save}
                 disableElevation
                 color="secondary"
                 onClick={(e) => {
                   e.preventDefault();
-                  postData(clientList, urlClient);
+                  postData(clientList, urlClient, sendClose());
                 }}
               >
                 저장
@@ -199,6 +204,9 @@ const CreateClient = (props) => {
                       label="전화번호"
                       fullWidth
                       name="clientNumber"
+                      required
+                      helperText="Incorrect entry."
+                      error={validate}
                       value={item.clientNumber}
                       sx={{ marginBottom: 2 }}
                       onChange={(e) => {

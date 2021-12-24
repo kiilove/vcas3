@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
   Input,
   InputAdornment,
@@ -13,7 +14,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { grey, purple, yellow } from "@mui/material/colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BASE_URL } from "../../config/base";
 import { postData } from "../modules/ApiData";
@@ -100,29 +101,49 @@ const WarningMessage = styled.span`
 `;
 
 const CreateClient = (props) => {
-  const [save, setSave] = useState(true);
-  const [validate, setValidate] = useState(false);
+  const [save, setSave] = useState(false);
+  const [err, setErr] = useState(true);
+  const [validate, setValidate] = useState([]);
   const [count, setCount] = useState(1);
   const [clientList, setClientList] = useState([{ clientNumber: "" }]);
   const urlClient = `${BASE_URL}/api/client/register/clients`;
-  const sendClose = () => {
-    props.handleClose();
+  const sendClose = (save) => {
+    props.setEdited(false);
+    props.handleClose(save);
+  };
+
+  const validateValue = (str) => {
+    if (isNaN(str)) {
+      return false;
+    } else if (str.length === 0) {
+      props.setEdited(false);
+      return false;
+    } else {
+      return true;
+    }
   };
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    setValidate(isNaN(value));
     const list = [...clientList];
+    const valid = [...validate];
     list[index][name] = value;
+    valid[index] = validateValue(value);
+
     setClientList(list);
-    setSave(false);
+    setValidate(valid);
+    setSave(true);
+    props.setEdited(true);
   };
 
   // handle click event of the Remove button
   const handleRemoveClick = (index) => {
     const list = [...clientList];
+    const valid = [...validate];
     list.splice(index, 1);
+    valid.splice(index, 1);
     setClientList(list);
+    setValidate(valid);
     count > 0 && setCount(count - 1);
   };
 
@@ -132,6 +153,16 @@ const CreateClient = (props) => {
     setCount(count + 1);
   };
 
+  useEffect(() => {
+    const chkValidate = validate.filter((item) => item === false);
+    if (chkValidate.length !== 0) {
+      setErr(true);
+    } else if (validate.length > 0 && chkValidate.length === 0) {
+      setErr(false);
+    }
+  }, [clientList.length, validate]);
+
+  console.log(validate);
   return (
     <Container>
       <Canvas style={{ paddingTop: "0px" }}>
@@ -178,8 +209,8 @@ const CreateClient = (props) => {
                 size="small"
                 variant="contained"
                 sx={{ mr: 1 }}
-                disabled={save}
                 disableElevation
+                disabled={err}
                 color="secondary"
                 onClick={(e) => {
                   e.preventDefault();
@@ -194,11 +225,15 @@ const CreateClient = (props) => {
             <CreateInput>
               {clientList &&
                 clientList.map((item, index) => (
-                  <FormControl sx={{ m: 1 }} variant="standard" fullWidth>
-                    <InputLabel htmlFor="Phone Number Input">
-                      전화번호
-                    </InputLabel>
+                  <FormControl
+                    sx={{ m: 1 }}
+                    variant="standard"
+                    fullWidth
+                    error={!validate[index]}
+                  >
+                    <InputLabel htmlFor="clientNumber">전화번호</InputLabel>
                     <Input
+                      id={index}
                       size="small"
                       variant="standard"
                       label="전화번호"
@@ -206,7 +241,6 @@ const CreateClient = (props) => {
                       name="clientNumber"
                       required
                       helperText="Incorrect entry."
-                      error={validate}
                       value={item.clientNumber}
                       sx={{ marginBottom: 2 }}
                       onChange={(e) => {
@@ -226,6 +260,13 @@ const CreateClient = (props) => {
                         </InputAdornment>
                       }
                     />
+                    <FormHelperText
+                      name="clientNumber"
+                      id={index}
+                      disabled={validate}
+                    >
+                      숫자만 입력해주세요!
+                    </FormHelperText>
                   </FormControl>
                 ))}
               <TrashIcon></TrashIcon>

@@ -86,16 +86,21 @@ const ClientListCard = () => {
   const [fillterdGroup, setFillterdGroup] = useState("all");
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [edited, setEdited] = useState(false);
 
   const handleOpenExcel = () => setOpenExcel(true);
-  const handleCloseExcel = () => {
+  const handleCloseExcel = (save) => {
     setOpenExcel(false);
-    setRefresh(!refresh);
+    save && setRefresh(!refresh);
   };
   const handleOpenSingle = () => setOpenSingle(true);
-  const handleCloseSingle = () => {
-    setOpenSingle(false);
-    setRefresh(!refresh);
+  const handleCloseSingle = (save) => {
+    if (edited) {
+      alert("저장되지 않았어.");
+    } else {
+      setOpenSingle(false);
+      save && setRefresh(!refresh);
+    }
   };
 
   const handleGroup = (e) => {
@@ -165,7 +170,10 @@ const ClientListCard = () => {
               <CreateClientExcel handleClose={handleCloseExcel} />
             </Modal>
             <Modal open={openSingle} onClose={handleCloseSingle}>
-              <CreateClient handleClose={handleCloseSingle} />
+              <CreateClient
+                handleClose={handleCloseSingle}
+                setEdited={setEdited}
+              />
             </Modal>
           </ListActionWrapper>
         </ComponentHeaderWrapper>

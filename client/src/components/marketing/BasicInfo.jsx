@@ -1,28 +1,47 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { blue, grey, pink, yellow } from "@mui/material/colors";
+import {
+  blue,
+  blueGrey,
+  green,
+  grey,
+  pink,
+  red,
+  yellow,
+} from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ImClock } from "react-icons/im";
 
 import {
   faBookmark as fsBookmark,
   faThumbsUp as fsThumbsUp,
   faThumbsDown as fsThumbsDown,
+  faClock as fsClock,
+  faCheckCircle as fsCheckCircle,
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
   faThumbsUp as frThumbsUp,
   faBookmark as frBookmark,
   faThumbsDown as frThumbsDown,
+  faClock as frClock,
+  faCheckCircle as frCheckCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import { BASE_URL } from "../../config/base";
 import { putData } from "../modules/ApiData";
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import ko from "date-fns/locale/ko";
+registerLocale("ko", ko);
 
 const InfoWrapper = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
+
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -30,6 +49,7 @@ const InfoWrapper = styled.div`
 
 const InfoNumber = styled.span`
   height: 100%;
+  width: 100%;
   display: flex;
   margin-top: 10px;
   justify-content: center;
@@ -40,11 +60,11 @@ const InfoNumber = styled.span`
 
 const InfoAction = styled.div`
   height: 100%;
-  width: 50%;
+  width: 100%;
 
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -63,17 +83,53 @@ const InfoCheckBox = styled.div`
   border-radius: 50px;
 `;
 
+const InfoCheckDate = styled.div`
+  width: 50%;
+  height: 50px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ClientIcon = (icon) => (
   <CheckIcon>
     <FontAwesomeIcon icon={icon} />
   </CheckIcon>
 );
 
+const CheckIconDate = styled.span`
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ClientIconDate = (icon) => (
+  <CheckIconDate>
+    <FontAwesomeIcon icon={icon} />
+  </CheckIconDate>
+);
+
+const DatePickerBox = styled(DatePicker)`
+  width: 250px;
+  padding: 10px;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  text-decoration: line-through;
+  text-decoration: ${(prop) => (prop.checked ? "line-through" : "none")};
+`;
 const BasicInfo = (props) => {
   const [propData, setPropData] = useState({});
   const [like, setLike] = useState(false);
   const [disLike, setDisLike] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [alarm, setAlarm] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
 
   const handleLike = () => {
     setLike(!like);
@@ -85,6 +141,14 @@ const BasicInfo = (props) => {
 
   const handleFavorite = () => {
     setFavorite(!favorite);
+  };
+
+  const handleDate = () => {
+    setAlarm(!alarm);
+  };
+
+  const handleChecked = () => {
+    setChecked(!checked);
   };
 
   useEffect(() => {
@@ -183,6 +247,53 @@ const BasicInfo = (props) => {
             }}
           />
         </InfoCheckBox>
+        <InfoCheckBox>
+          <Checkbox
+            icon={ClientIcon(frClock)}
+            checkedIcon={ClientIcon(fsClock)}
+            checked={alarm}
+            onClick={(e) => {
+              e.preventDefault();
+              handleDate();
+            }}
+            sx={{
+              color: green[800],
+              "&.Mui-checked": {
+                color: green[800],
+              },
+            }}
+          />
+        </InfoCheckBox>
+        {alarm && (
+          <InfoCheckDate style={{ flexDirection: "row" }}>
+            <DatePickerBox
+              locale="ko"
+              showTimeSelect
+              timeFormat="p"
+              timeIntervals={5}
+              selected={startDate}
+              dateFormat="yyyy년 MM월 dd일 EE요일 a hh:mm"
+              onChange={(date) => setStartDate(date)}
+              checked={checked}
+            />
+
+            <Checkbox
+              icon={ClientIconDate(frCheckCircle)}
+              checkedIcon={ClientIconDate(fsCheckCircle)}
+              checked={checked}
+              onClick={(e) => {
+                e.preventDefault();
+                handleChecked();
+              }}
+              sx={{
+                color: blueGrey[800],
+                "&.Mui-checked": {
+                  color: blueGrey[800],
+                },
+              }}
+            />
+          </InfoCheckDate>
+        )}
       </InfoAction>
     </InfoWrapper>
   );

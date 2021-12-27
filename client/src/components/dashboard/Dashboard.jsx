@@ -12,6 +12,7 @@ import {
   ComponentHeaderWrapper,
 } from "../styles/Common";
 import ClientList from "./ClientList";
+import TodoList from "./TodoList";
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -89,7 +90,12 @@ const Dashboard = () => {
           </CanvasCustom>
         </Grid>
         <Grid item xs={12} md={4}>
-          <CanvasCustom>test3</CanvasCustom>
+          <CanvasCustom>
+            <TodoList
+              title={"할일 목록"}
+              subTitle={"고객과의 약속 일정등 목록입니다."}
+            />
+          </CanvasCustom>
         </Grid>
       </Grid>
     </Container>

@@ -70,18 +70,14 @@ const LeftMenu = () => {
           >
             VCAS
           </div>
-          <Tooltip title="캘린더" placement="right">
-            <IconBox>
-              <FontAwesomeIcon icon={faCalendarAlt} />
-            </IconBox>
-          </Tooltip>
-          <Tooltip title="상담업무" placement="right">
-            <Link to="/marketingDetail">
+          <Tooltip title="모아보기" placement="right">
+            <Link to="/">
               <IconBox>
-                <FontAwesomeIcon icon={faPhone} />
+                <FontAwesomeIcon icon={faCalendarAlt} />
               </IconBox>
             </Link>
           </Tooltip>
+
           <Tooltip title="고객정보" placement="right">
             <Link to="/clientList">
               <IconBox>

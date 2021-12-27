@@ -1,6 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
 import ClientListCard from "./components/clients/ClientListCard";
+import Dashboard from "./components/dashboard/Dashboard";
 import MarketingDetail from "./components/marketing/MarketingDetail";
 
 import Home from "./pages/Home";
@@ -13,7 +14,7 @@ function App() {
     <div className="App">
       <Switch>
         <Route exact path="/">
-          {isLogin ? <Home /> : <Redirect to="/login" />}
+          {isLogin ? <Home child={<Dashboard />} /> : <Redirect to="/login" />}
         </Route>
         <Route path="/login">
           <Login />

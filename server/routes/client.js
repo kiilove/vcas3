@@ -42,6 +42,22 @@ router.get("/find/:id", async (req, res) => {
   }
 });
 
+//GET Marketing
+router.get("/mkfind/", async (req, res) => {
+  try {
+    const client = await Client.find({
+      "clientStatus.like": false,
+      "clientStatus.dislike": false,
+    })
+      .limit(1)
+      .sort({ _id: -1 });
+    console.log(client);
+    res.status(200).json(client);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET ALL
 router.get("/", async (req, res) => {
   try {

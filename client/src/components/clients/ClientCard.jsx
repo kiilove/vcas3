@@ -27,7 +27,7 @@ const Info = styled.div`
 const Container = styled.div`
   border-radius: 5px;
   border: 0.5px solid ${grey[300]};
-  width: 160px;
+  width: 140px;
   height: 60px;
   display: flex;
   align-items: center;

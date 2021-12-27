@@ -150,19 +150,32 @@ const CreateClient = (props) => {
   // handle click event of the Add button
   const handleAddClientList = () => {
     setClientList([...clientList, { clientNumber: "" }]);
+
     setCount(count + 1);
+    //setErr(true);
   };
 
   useEffect(() => {
     const chkValidate = validate.filter((item) => item === false);
-    if (chkValidate.length !== 0) {
+    const chkValue = clientList.filter(
+      (item) => Object.values(item)[0].length === 0
+    );
+    console.log(chkValue.length);
+    if (chkValidate.length !== 0 || chkValidate.length !== 0) {
       setErr(true);
-    } else if (validate.length > 0 && chkValidate.length === 0) {
+    } else if (
+      validate.length > 0 &&
+      chkValidate.length === 0 &&
+      chkValue.length === 0
+    ) {
       setErr(false);
+    } else {
+      setErr(true);
     }
-  }, [clientList.length, validate]);
+  }, [clientList, validate, err]);
 
-  console.log(validate);
+  //console.log(validate);
+
   return (
     <Container>
       <Canvas style={{ paddingTop: "0px" }}>

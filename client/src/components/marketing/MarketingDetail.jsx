@@ -69,8 +69,8 @@ const MarketingDetail = () => {
   const [extraInfo, setExtraInfo] = useState({});
   const [memoInfo, setMemoInfo] = useState([]);
   const { uid } = useParams();
-  const URL = `${BASE_URL}/api/client/find/${uid}`;
 
+  const URL = `${BASE_URL}/api/client/find/${uid}`;
   useEffect(() => {
     getData(URL).then((res) => {
       setBasicInfo(() => {
